@@ -1,0 +1,22 @@
+es_host: elasticsearch
+es_port: 9200
+name: spike
+type: frequency
+index: metric-*
+num_events: 50
+timeframe:
+    seconds: 30
+
+# The alert is use when a match is found
+alert:
+- "email"
+
+smtp_host: "smtp.gmail.com"
+smtp_port: 465
+smtp_ssl : true
+from_addr: "prateek.jain@perennialsys.com"
+smtp_auth_file: /opt/elastalert/smtp_auth_file.yml
+# (required, email specific)
+# a list of email addresses to send alerts to
+email:
+- "akijain058@gmail.com"
