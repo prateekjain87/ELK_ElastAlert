@@ -3,7 +3,7 @@ version: '2'
 services:
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    build: ./elasticsearch
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
@@ -17,7 +17,7 @@ services:
       - elk
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:6.5.4
+    build: ./logstash/
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
@@ -43,9 +43,34 @@ services:
       - elk
     depends_on:
       - elasticsearch
+ 
+  filebeat:
+    build: ./filebeat/
+    container_name: filebeat
+    networks:
+      - elk
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro  
+    depends_on:
+      - elasticsearch 
+    # network_mode: host
+
+  metricbeat:
+    build: ./metricbeat/
+    container_name: metricbeat
+    networks: 
+      - elk
+    depends_on:
+      - elasticsearch 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
 
   elastalert:
-    image: elastalert:latest
+    build: ./elastalert
     ports:
       - "3030:3030"
       - "3333:3333"
@@ -59,9 +84,10 @@ services:
       - ./elastalert/config/elastalert-test.yaml:/opt/elastalert/config-test.yaml
       - ./elastalert/config/config.json:/opt/elastalert-server/config/config.json
       - ./elastalert/rules:/opt/elastalert/rules
+      - /opt/elastalert/smtp_auth_file.yml:/opt/elastalert/smtp_auth_file.yml
       - ./elastalert/rule_templates:/opt/elastalert/rule_templates 
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro 
+     # - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      #- /var/run/docker.sock:/var/run/docker.sock:ro 
 
 networks:
   elk:
