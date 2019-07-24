@@ -88,6 +88,11 @@ services:
       - ./elastalert/rule_templates:/opt/elastalert/rule_templates 
      # - /var/lib/docker/containers:/var/lib/docker/containers:ro
       #- /var/run/docker.sock:/var/run/docker.sock:ro 
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
 
 networks:
   elk:
