@@ -15,7 +15,6 @@ import string
 import sys
 import os
 import yaml
-import mock
 
 from elastalert.config import load_conf
 from elastalert.config import load_modules
