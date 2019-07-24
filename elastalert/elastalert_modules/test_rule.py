@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+from __future__ import absolute_import
+from __future__ import print_function
+
 import argparse
 import copy
 import datetime
@@ -9,10 +13,14 @@ import random
 import re
 import string
 import sys
-
+import os
+import yaml
 import mock
 
 from elastalert.config import load_conf
+from elastalert.config import load_modules
+from elastalert.config import load_options
+from elastalert.config import load_rule_yaml
 from elastalert.elastalert import ElastAlerter
 from elastalert.util import EAException
 from elastalert.util import elasticsearch_client
