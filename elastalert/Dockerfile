@@ -44,6 +44,7 @@ COPY config/elastalert-test.yaml /opt/elastalert/config-test.yaml
 COPY config/config.json config/config.json
 COPY rule_templates/ /opt/elastalert/rule_templates
 COPY elastalert_modules/ /opt/elastalert/elastalert_modules
+COPY elastalert_modules/test_rule.py  /opt/elastalert/elastalert/
 
 # Add default rules directory
 # Set permission as unpriviledged user (1000:1000), compatible with Kubernetes
