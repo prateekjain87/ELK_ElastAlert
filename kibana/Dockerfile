@@ -1,3 +1,5 @@
-FROM docker.elastic.co/kibana/kibana:6.5.4
+ARG ELK_VERSION
+
+FROM docker.elastic.co/kibana/kibana:${ELK_VERSION}
 # Add your kibana plugins setup here
-RUN kibana-plugin install https://github.com/bitsensor/elastalert-kibana-plugin/releases/download/1.0.1/elastalert-kibana-plugin-1.0.1-6.5.4.zip
+RUN kibana-plugin install https://github.com/bitsensor/elastalert-kibana-plugin/releases/download/1.1.0/elastalert-kibana-plugin-1.1.0-7.5.0.zip

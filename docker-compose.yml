@@ -1,9 +1,12 @@
-version: '2.1'
+version: '3.2'
 
 services:
 
   elasticsearch:
-    build: ./elasticsearch
+    build: 
+      context: ./elasticsearch
+      args:
+        ELK_VERSION: $ELK_VERSION
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
@@ -17,7 +20,10 @@ services:
       - elk
 
   logstash:
-    build: ./logstash/
+    build: 
+      context: ./logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
@@ -33,7 +39,10 @@ services:
       - elasticsearch
 
   kibana:
-    build: ./kibana
+    build: 
+      context: ./kibana
+      args: 
+        ELK_VERSION: $ELK_VERSION
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
@@ -45,7 +54,10 @@ services:
       - elasticsearch
  
   filebeat:
-    build: ./filebeat/
+    build: 
+      context: ./filebeat/
+      args:
+        ELK_VERSION: $ELK_VERSION
     container_name: filebeat
     networks:
       - elk
@@ -57,7 +69,10 @@ services:
     # network_mode: host
 
   metricbeat:
-    build: ./metricbeat/
+    build: 
+      context: ./metricbeat/
+      args: 
+        ELK_VERSION: $ELK_VERSION
     container_name: metricbeat
     networks: 
       - elk
@@ -70,7 +85,7 @@ services:
       - /:/hostfs:ro
 
   elastalert:
-    build: ./elastalert
+    image: prateekjain87/elastalert 
     ports:
       - "3030:3030"
       - "3333:3333"
@@ -84,7 +99,7 @@ services:
       - ./elastalert/config/elastalert-test.yaml:/opt/elastalert/config-test.yaml
       - ./elastalert/config/config.json:/opt/elastalert-server/config/config.json
       - ./elastalert/rules:/opt/elastalert/rules
-      - /opt/elastalert/smtp_auth_file.yml:/opt/elastalert/smtp_auth_file.yml
+      - ./elastalert/smtp_auth_file.yml:/opt/elastalert/smtp_auth_file.yml
       - ./elastalert/rule_templates:/opt/elastalert/rule_templates 
      # - /var/lib/docker/containers:/var/lib/docker/containers:ro
       #- /var/run/docker.sock:/var/run/docker.sock:ro 
